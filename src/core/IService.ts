@@ -13,10 +13,10 @@ export interface IService<
 }
 
 export interface IServiceResponse<T> {
-    Message: string | null | undefined;
-    Errors: string[] | null | undefined;
+    Message?: string;
+    Errors?: string[];
     Success: boolean;
-    Data: T | null | undefined;
+    Data?: T;
 }
 
 export interface IServiceRequest {}

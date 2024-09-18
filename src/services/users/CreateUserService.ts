@@ -1,17 +1,22 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { ApiProperty } from "@nestjs/swagger";
 import { Model } from "mongoose";
 import type {
     ICreateUserService,
     ICreateUserServiceRequest,
     ICreateUserServiceResponse,
     ICreateUserServiceDataResponseData,
-} from "src/core/auth/icreateUserService";
-import type { IUser } from "src/core/Ischema/user.schema";
+} from "src/core/users/ICreateUserService";
+import type { IUser } from "src/Schema/user.schema";
+import { UserValidations } from "./UserValidations";
 
 @Injectable()
 export class CreateUserService implements ICreateUserService {
-    private constructor(@InjectModel("user") private readonly userModel: Model<IUser>) {}
+    public constructor(
+        @InjectModel("user") private readonly userModel: Model<IUser>,
+        private readonly userValidations: UserValidations,
+    ) {}
 
     public ExecuteAsync = async (
         request: ICreateUserServiceRequest,
@@ -22,7 +27,6 @@ export class CreateUserService implements ICreateUserService {
                 Message: "Validation error",
                 Errors: validations,
                 Success: false,
-                Data: null,
             });
         }
         let role;
@@ -37,6 +41,7 @@ export class CreateUserService implements ICreateUserService {
             email: request.Email,
             password: request.Password,
             role: role,
+            createdOn: new Date(),
         });
 
         await user.save();
@@ -45,12 +50,21 @@ export class CreateUserService implements ICreateUserService {
             Message: "User created",
             Errors: undefined,
             Success: true,
-            Data: undefined,
         });
     };
 
     public ValidateAsync = async (request: CreateUserServiceRequest): Promise<string[]> => {
         const errors: string[] = [];
+
+        const emailErrors = await this.userValidations.EmailIsValid(request.Email);
+        const passwordErrors = this.userValidations.PasswordIsValid(request.Password);
+
+        if (passwordErrors.length > 0) {
+            errors.push(...passwordErrors);
+        }
+        if (emailErrors.length > 0) {
+            errors.push(...emailErrors);
+        }
         if (!request.Email) {
             errors.push("Email is required");
         }
@@ -62,37 +76,30 @@ export class CreateUserService implements ICreateUserService {
 }
 
 export class CreateUserServiceRequest implements ICreateUserServiceRequest {
-    public Name: string;
-    public Email: string;
-    public Password: string;
-    public Role: number | null | undefined;
+    @ApiProperty()
+    public Name!: string;
+    @ApiProperty()
+    public Email!: string;
+    @ApiProperty()
+    public Password!: string;
+    @ApiProperty({ required: false })
+    public Role?: number;
+}
 
-    public constructor(data: ICreateUserServiceRequest) {
-        this.Name = data.Name;
-        this.Email = data.Email;
-        this.Password = data.Password;
-        this.Role = data.Role;
-    }
+export class CreateUserServiceDataResponseData implements ICreateUserServiceDataResponseData {
+    public Message!: string;
 }
 
 export class CreateUserServiceResponse implements ICreateUserServiceResponse {
-    public Message: string | null | undefined;
-    public Errors: string[] | null | undefined;
-    public Success: boolean;
-    public Data: CreateUserServiceDataResponseData | null | undefined;
+    public Message?: string;
+    public Errors?: string[];
+    public Success!: boolean;
+    public Data?: CreateUserServiceDataResponseData;
 
     public constructor(data: ICreateUserServiceResponse) {
         this.Message = data.Message;
         this.Errors = data.Errors;
         this.Success = data.Success;
         this.Data = data.Data;
-    }
-}
-
-export class CreateUserServiceDataResponseData implements ICreateUserServiceDataResponseData {
-    public Message: string;
-
-    public constructor(message: string) {
-        this.Message = message;
     }
 }

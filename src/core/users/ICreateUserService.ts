@@ -1,4 +1,4 @@
-import type { IService, IServiceRequest, IServiceResponse } from "../iservice";
+import type { IService, IServiceRequest, IServiceResponse } from "../IService";
 
 export interface ICreateUserService
     extends IService<
@@ -11,7 +11,7 @@ export interface ICreateUserServiceRequest extends IServiceRequest {
     Name: string;
     Email: string;
     Password: string;
-    Role: number | null | undefined;
+    Role?: number;
 }
 
 export interface ICreateUserServiceResponse

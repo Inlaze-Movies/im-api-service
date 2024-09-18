@@ -1,6 +1,10 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
+import { UserSchema } from "src/Schema/user.schema";
+import { AuthControllers } from "src/controllers/auth.controller";
+import { UserControllers } from "src/controllers/user.controller";
+import { CreateUserService } from "src/services/users/CreateUserService";
+import { GetAllUserService } from "src/services/users/GetAllUserService";
+import { UserValidations } from "src/services/users/UserValidations";
 
 import { MongooseModule } from "@nestjs/mongoose";
 
@@ -9,8 +13,9 @@ import { MongooseModule } from "@nestjs/mongoose";
         MongooseModule.forRoot(
             "mongodb://quickmoviesdb:quickmoviesdb@qm-mongo-server/qmdatabase?authSource=admin",
         ),
+        MongooseModule.forFeature([{ name: "user", schema: UserSchema }]),
     ],
-    controllers: [AppController],
-    providers: [AppService],
+    controllers: [AuthControllers, UserControllers],
+    providers: [CreateUserService, GetAllUserService, UserValidations],
 })
 export class AppModule {}

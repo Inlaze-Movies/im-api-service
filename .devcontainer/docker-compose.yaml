@@ -7,12 +7,16 @@ services:
         volumes:
             - ../..:/workspaces:cached
         command: sleep infinity
+        ports:
+            - "8080:8080"
         networks:
             - qm-dev
 
     qm-mongo-server:
         container_name: qm-mongo-server
         image: mongo:latest
+        volumes:
+            - qm-mongo-data:/data/db
         ports:
             - "27017:27017"
         environment:
@@ -20,6 +24,21 @@ services:
             MONGO_INITDB_ROOT_PASSWORD: quickmoviesdb
         networks:
             - qm-dev
+            
+    qm-mongo-client:
+        container_name: qm-mongo-client
+        image: mongo-express:latest
+        ports:
+            - "8081:8081"
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: quickmoviesdb
+            ME_CONFIG_MONGODB_ADMINPASSWORD: quickmoviesdb
+            ME_CONFIG_MONGODB_SERVER: qm-mongo-server
+        networks:
+            - qm-dev
+            
+volumes:
+    qm-mongo-data:
 
 networks:
     qm-dev:
