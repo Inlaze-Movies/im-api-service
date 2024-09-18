@@ -1,8 +1,10 @@
 {
-	"name": "Node.js & TypeScript",
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bullseye",
-	"features": {
-		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
-	},
-	"postCreateCommand": "npm install"
+    "name": "Quick Movies",
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "qm-service-dev",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
+    "postCreateCommand": "npm install"
 }

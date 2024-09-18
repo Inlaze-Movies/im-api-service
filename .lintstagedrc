@@ -1,4 +1,4 @@
 {
-  "**/{src,test}/**/*.{ts,tsx}": ["eslint", "prettier --write"],
-  "**/*.{ts,tsx}": "bash -c tsc -p tsconfig.json --noEmit"
+    "**/{src,test}/**/*.{ts,tsx}": ["eslint", "prettier --write"],
+    "**/*.{ts,tsx}": "bash -c tsc -p tsconfig.json --noEmit"
 }

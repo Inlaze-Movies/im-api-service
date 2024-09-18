@@ -1,0 +1,26 @@
+services:
+    qm-service-dev:
+        container_name: quick-movies-service-dev
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ../..:/workspaces:cached
+        command: sleep infinity
+        networks:
+            - qm-dev
+
+    qm-mongo-server:
+        container_name: qm-mongo-server
+        image: mongo:latest
+        ports:
+            - "27017:27017"
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: quickmoviesdb
+            MONGO_INITDB_ROOT_PASSWORD: quickmoviesdb
+        networks:
+            - qm-dev
+
+networks:
+    qm-dev:
+        name: qm-dev
