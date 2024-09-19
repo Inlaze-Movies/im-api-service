@@ -5,15 +5,20 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(AppModule);
 
-    const config = new DocumentBuilder()
-        .setTitle("Todo example")
-        .setDescription("The Todo Api description")
-        .setVersion("1.0")
-        .addTag("todos")
-        .build();
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup("api/swagger", app, document);
+    const apiPath = "api";
+    app.setGlobalPrefix(apiPath);
 
-    await app.listen(3000);
+    const config = new DocumentBuilder()
+        .setTitle("Quickbet Movies")
+        .setDescription("API for Quick Movies")
+        .setVersion("1.0")
+        .addBearerAuth()
+        .build();
+    const document = SwaggerModule.createDocument(app, config, {
+        include: [AppModule],
+    });
+    SwaggerModule.setup(`${apiPath}/swagger`, app, document);
+
+    await app.listen(8080);
 }
 void bootstrap();

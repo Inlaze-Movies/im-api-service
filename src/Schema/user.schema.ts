@@ -1,12 +1,16 @@
 import { Schema, model } from "mongoose";
-import type { Document } from "mongoose";
+import type { Document, ObjectId } from "mongoose";
+import { SoftDelete } from "src/services/SoftDelete";
 
 export interface IUser extends Document {
+    id: ObjectId;
     name: string;
     email: string;
     password: string;
-    role: string;
-    createdAt: Date;
+    role: number;
+    isDeleted: boolean;
+    createdOn: Date;
+    updatedOn?: Date;
 }
 
 export const UserSchema = new Schema({
@@ -23,13 +27,11 @@ export const UserSchema = new Schema({
         required: true,
     },
     role: {
-        type: String,
+        type: Number,
         required: true,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
 });
+
+UserSchema.plugin(SoftDelete);
 
 export const UserModel = model<IUser>("user", UserSchema);
