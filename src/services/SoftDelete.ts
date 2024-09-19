@@ -1,24 +1,40 @@
-export abstract class SoftDelete implements ISoftDelete {
-    public abstract Id: string;
-    public IsDeleted!: boolean;
-    public CreatedOn!: Date;
-    public UpdatedOn?: Date;
+import type { Schema } from "mongoose";
 
-    public softDelete = (): void => {
-        this.IsDeleted = true;
-        this.UpdatedOn = new Date();
+export const SoftDelete = (schema: Schema): void => {
+    schema.add({
+        isDeleted: {
+            type: Boolean,
+            default: false,
+            required: true,
+        },
+        createdOn: {
+            type: Date,
+            default: new Date(),
+            required: true,
+        },
+        updatedOn: {
+            type: Date,
+        },
+    });
+
+    schema.pre("find", async function (next) {
+        await this.where({ isDeleted: false });
+        next();
+    });
+
+    schema.pre("findOne", async function (next) {
+        await this.where({ isDeleted: false });
+        next();
+    });
+
+    schema.pre("countDocuments", async function (next) {
+        await this.where({ isDeleted: false });
+        next();
+    });
+
+    schema.methods.softDelete = async function (): Promise<void> {
+        this.isDeleted = true;
+        this.updatedOn = new Date();
+        await this.save();
     };
-}
-
-interface ISoftDelete extends ICreatable, IUpdatable {
-    Id: string;
-    IsDeleted: boolean;
-}
-
-interface ICreatable {
-    CreatedOn: Date;
-}
-
-interface IUpdatable {
-    UpdatedOn?: Date;
-}
+};

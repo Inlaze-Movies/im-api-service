@@ -1,19 +1,19 @@
 import { Schema, model } from "mongoose";
-import type { Document } from "mongoose";
-import type { SoftDelete } from "../services/SoftDelete";
+import type { Document, ObjectId } from "mongoose";
+import { SoftDelete } from "src/services/SoftDelete";
 
-export interface IUser extends Document, SoftDelete {
+export interface IUser extends Document {
+    id: ObjectId;
     name: string;
     email: string;
     password: string;
     role: number;
+    isDeleted: boolean;
+    createdOn: Date;
+    updatedOn?: Date;
 }
 
 export const UserSchema = new Schema({
-    id: {
-        type: String,
-        required: true,
-    },
     name: {
         type: String,
         required: true,
@@ -30,24 +30,8 @@ export const UserSchema = new Schema({
         type: Number,
         required: true,
     },
-    isDeleted: {
-        type: Boolean,
-        required: true,
-    },
-    createdOn: {
-        type: Date,
-        required: true,
-        default: new Date(),
-    },
-    updatedOn: {
-        type: Date,
-    },
 });
 
-UserSchema.methods.softDelete = function (): Promise<IUser> {
-    this.isDeleted = true;
-    this.updatedOn = new Date();
-    return this.save() as Promise<IUser>;
-};
+UserSchema.plugin(SoftDelete);
 
 export const UserModel = model<IUser>("user", UserSchema);

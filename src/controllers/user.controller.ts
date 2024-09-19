@@ -1,5 +1,7 @@
-import { Get, Controller, BadRequestException } from "@nestjs/common";
+import { Get, Controller, BadRequestException, UseGuards } from "@nestjs/common";
 import { ApiTags, ApiOperation } from "@nestjs/swagger";
+
+import { AuthGuard } from "src/services/auth/auth.guard";
 import { GetAllUserService } from "src/services/users/GetAllUserService";
 import type { GetAllUserServiceResponse } from "src/services/users/GetAllUserService";
 
@@ -8,6 +10,7 @@ import type { GetAllUserServiceResponse } from "src/services/users/GetAllUserSer
 export class UserControllers {
     public constructor(private readonly getAllUserService: GetAllUserService) {}
 
+    @UseGuards(AuthGuard)
     @Get("getAll")
     @ApiOperation({ summary: "Get all users" })
     public async CreateUserAsync(): Promise<GetAllUserServiceResponse> {

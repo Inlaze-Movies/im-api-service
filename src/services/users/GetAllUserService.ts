@@ -32,10 +32,11 @@ export class GetAllUserService implements IGetAllUserService {
 
         const userInfo: IUsersInfo[] = users.map((user) => {
             return {
+                Id: user.id.toString(),
                 Name: user.name,
                 Email: user.email,
                 Role: user.role,
-                CreatedOn: user.CreatedOn,
+                CreatedOn: user.createdOn,
             };
         });
 

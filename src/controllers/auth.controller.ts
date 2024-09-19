@@ -1,7 +1,7 @@
 import { Body, Post, Controller, BadRequestException } from "@nestjs/common";
 import { ApiTags, ApiBody, ApiOperation } from "@nestjs/swagger";
-import { CreateUserService, CreateUserServiceRequest } from "src/services/users/CreateUserService";
-import type { CreateUserServiceResponse } from "src/services/users/CreateUserService";
+import { CreateUserService, CreateUserServiceRequest } from "src/services/auth/CreateUserService";
+import type { CreateUserServiceResponse } from "src/services/auth/CreateUserService";
 
 @ApiTags("auth")
 @Controller("auth")

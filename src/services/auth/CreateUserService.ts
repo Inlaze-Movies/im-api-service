@@ -7,9 +7,9 @@ import type {
     ICreateUserServiceRequest,
     ICreateUserServiceResponse,
     ICreateUserServiceDataResponseData,
-} from "src/core/users/ICreateUserService";
+} from "src/core/auth/ICreateUserService";
 import type { IUser } from "src/Schema/user.schema";
-import { UserValidations } from "./UserValidations";
+import { UserValidations } from "src/services/users/UserValidations";
 
 @Injectable()
 export class CreateUserService implements ICreateUserService {
@@ -53,11 +53,11 @@ export class CreateUserService implements ICreateUserService {
         });
     };
 
-    public ValidateAsync = async (request: CreateUserServiceRequest): Promise<string[]> => {
+    public ValidateAsync = async (request: ICreateUserServiceRequest): Promise<string[]> => {
         const errors: string[] = [];
 
-        const emailErrors = await this.userValidations.EmailIsValid(request.Email);
-        const passwordErrors = this.userValidations.PasswordIsValid(request.Password);
+        const emailErrors: string[] = await this.userValidations.EmailIsValid(request.Email);
+        const passwordErrors: string[] = this.userValidations.PasswordIsValid(request.Password);
 
         if (passwordErrors.length > 0) {
             errors.push(...passwordErrors);

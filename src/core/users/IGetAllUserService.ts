@@ -17,6 +17,7 @@ export interface IGetAllUserServiceDataResponseData {
 }
 
 export interface IUsersInfo {
+    Id: string;
     Name: string;
     Email: string;
     Role: number;
