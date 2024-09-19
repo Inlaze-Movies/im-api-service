@@ -4,7 +4,7 @@ import { TimeLine } from "src/services/SoftDelete";
 
 export interface IFavorite extends Document {
     id: ObjectId;
-    movieId: string;
+    movieId: number;
     originalTitle: string;
     isFavorite: boolean;
     createdOn: Date;
@@ -33,4 +33,4 @@ export const FavoriteSchema = new Schema({
 
 FavoriteSchema.plugin(TimeLine);
 
-export const UserModel = model<IFavorite>("favorite", FavoriteSchema);
+export const FavoriteModel = model<IFavorite>("favorite", FavoriteSchema);
