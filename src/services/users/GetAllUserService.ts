@@ -51,6 +51,12 @@ export class GetAllUserService implements IGetAllUserService {
     public ValidateAsync = async (): Promise<string[]> => {
         const errors: string[] = [];
 
+        const users = await this.userModel.find();
+
+        if (users.length === 0) {
+            errors.push("No users found");
+        }
+
         return errors;
     };
 }

@@ -17,18 +17,18 @@ export const SoftDelete = (schema: Schema): void => {
         },
     });
 
-    schema.pre("find", async function (next) {
-        await this.where({ isDeleted: false });
+    schema.pre("find", function (next) {
+        void this.where({ isDeleted: false });
         next();
     });
 
-    schema.pre("findOne", async function (next) {
-        await this.where({ isDeleted: false });
+    schema.pre("findOne", function (next) {
+        void this.where({ isDeleted: false });
         next();
     });
 
-    schema.pre("countDocuments", async function (next) {
-        await this.where({ isDeleted: false });
+    schema.pre("countDocuments", function (next) {
+        void this.where({ isDeleted: false });
         next();
     });
 
@@ -37,4 +37,17 @@ export const SoftDelete = (schema: Schema): void => {
         this.updatedOn = new Date();
         await this.save();
     };
+};
+
+export const TimeLine = (schema: Schema): void => {
+    schema.add({
+        createdOn: {
+            type: Date,
+            default: new Date(),
+            required: true,
+        },
+        updatedOn: {
+            type: Date,
+        },
+    });
 };

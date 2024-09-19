@@ -10,7 +10,8 @@ export class UserValidations {
         return !!user;
     };
 
-    public EmailIsValid = async (email: string): Promise<string[]> => {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    public EmailIsValidAsync = async (email: string): Promise<string[]> => {
         const errors: string[] = [];
         if (!email) {
             errors.push("Email is required");
@@ -23,9 +24,6 @@ export class UserValidations {
         }
         if (email.length < 5) {
             errors.push("Email must be at least 5 characters");
-        }
-        if (email && (await this.EmailExistsAsync(email))) {
-            errors.push("Email already exists");
         }
         if (errors.length === 0) {
             return [];

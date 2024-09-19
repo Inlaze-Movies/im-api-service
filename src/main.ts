@@ -9,10 +9,10 @@ async function bootstrap(): Promise<void> {
     app.setGlobalPrefix(apiPath);
 
     const config = new DocumentBuilder()
-        .setTitle("Todo example")
-        .setDescription("The Todo Api description")
+        .setTitle("Quickbet Movies")
+        .setDescription("API for Quick Movies")
         .setVersion("1.0")
-        .addTag("todos")
+        .addBearerAuth()
         .build();
     const document = SwaggerModule.createDocument(app, config, {
         include: [AppModule],
@@ -20,6 +20,5 @@ async function bootstrap(): Promise<void> {
     SwaggerModule.setup(`${apiPath}/swagger`, app, document);
 
     await app.listen(8080);
-    console.log(`Application is running on: ${await app.getUrl()}`);
 }
 void bootstrap();

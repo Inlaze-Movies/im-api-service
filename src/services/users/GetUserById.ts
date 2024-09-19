@@ -33,21 +33,13 @@ export class GetUserByIdService implements IGetUserByIdService {
 
         const user = await this.userModel.findById(request.Id);
 
-        if (!user) {
-            return new GetUserByIdServiceResponse({
-                Message: "User not found",
-                Errors: ["User not found"],
-                Success: false,
-            });
-        }
-
         const userInfo: IUserInfo[] = [
             {
-                Id: user.id.toString(),
-                Name: user.name,
-                Email: user.email,
-                Role: user.role,
-                CreatedOn: user.createdOn,
+                Id: user!.id.toString(),
+                Name: user!.name,
+                Email: user!.email,
+                Role: user!.role,
+                CreatedOn: user!.createdOn,
             },
         ];
 
@@ -61,6 +53,12 @@ export class GetUserByIdService implements IGetUserByIdService {
 
     public ValidateAsync = async (request: IGetUserByIdServiceRequest): Promise<string[]> => {
         const errors: string[] = [];
+
+        const user = await this.userModel.findById(request.Id);
+
+        if (!user) {
+            errors.push("User not found");
+        }
 
         if (!request.Id) {
             errors.push("Id is required");

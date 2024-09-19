@@ -56,8 +56,12 @@ export class CreateUserService implements ICreateUserService {
     public ValidateAsync = async (request: ICreateUserServiceRequest): Promise<string[]> => {
         const errors: string[] = [];
 
-        const emailErrors: string[] = await this.userValidations.EmailIsValid(request.Email);
+        const emailErrors: string[] = await this.userValidations.EmailIsValidAsync(request.Email);
         const passwordErrors: string[] = this.userValidations.PasswordIsValid(request.Password);
+
+        if (request.Email && (await this.userValidations.EmailExistsAsync(request.Email))) {
+            errors.push("Email already exists");
+        }
 
         if (passwordErrors.length > 0) {
             errors.push(...passwordErrors);
