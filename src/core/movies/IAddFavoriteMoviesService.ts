@@ -8,15 +8,12 @@ export interface IAddFavoriteMoviesService
     > {}
 
 export interface IAddFavoriteMoviesServiceRequest extends IServiceRequest {
-    Name: string;
-    Email: string;
-    Password: string;
-    Role?: number;
+    MovieId: number;
+    OriginalTitle: string;
+    UserId: string;
 }
 
 export interface IAddFavoriteMoviesServiceResponse
     extends IServiceResponse<IAddFavoriteMoviesServiceDataResponseData> {}
 
-export interface IAddFavoriteMoviesServiceDataResponseData {
-    Message: string;
-}
+export interface IAddFavoriteMoviesServiceDataResponseData {}
